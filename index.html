@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>maimai Beginner Guide (Single Page)</title>
+  <style>
+    :root{
+      --bg:#0b1020; --card:#121a33; --text:#e9ecf4; --muted:#b9c0d4;
+      --accent:#7dd3fc; --accent2:#a7f3d0; --border:rgba(255,255,255,.12);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --max:1100px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:radial-gradient(1200px 600px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+                 radial-gradient(900px 500px at 85% 15%, rgba(167,243,208,.12), transparent 60%),
+                 var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:24px}
+    header{position:sticky; top:0; z-index:50; backdrop-filter: blur(10px);
+      background:rgba(11,16,32,.65); border-bottom:1px solid var(--border)}
+    .nav{display:flex; gap:14px; align-items:center; justify-content:space-between; padding:14px 24px; max-width:var(--max); margin:0 auto}
+    .brand{display:flex; gap:10px; align-items:center; font-weight:700; letter-spacing:.2px}
+    .pill{font-size:12px; padding:4px 10px; border:1px solid var(--border); border-radius:999px; color:var(--muted)}
+    .navlinks{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{cursor:pointer; border:1px solid var(--border); background:rgba(255,255,255,.06);
+      color:var(--text); padding:10px 12px; border-radius:999px; font-size:14px}
+    .btn:hover{background:rgba(255,255,255,.10)}
+    .btn.primary{border-color:rgba(125,211,252,.55); background:rgba(125,211,252,.12)}
+    .hero{padding:28px 0 10px}
+    .heroGrid{display:grid; gap:18px; grid-template-columns: 1.3fr 1fr}
+    @media (max-width: 900px){ .heroGrid{grid-template-columns:1fr} }
+    .card{background:rgba(18,26,51,.75); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .heroCard{padding:22px}
+    h1{margin:0 0 8px; font-size:34px; line-height:1.15}
+    .sub{color:var(--muted); margin:0 0 16px; font-size:16px; line-height:1.5}
+    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .mini{font-size:13px; color:var(--muted); margin-top:10px}
+    .mediaCard{padding:14px}
+    .media{aspect-ratio:16/10; width:100%; border-radius:14px; border:1px solid var(--border);
+      background:linear-gradient(135deg, rgba(125,211,252,.14), rgba(167,243,208,.10));
+      display:flex; align-items:center; justify-content:center; color:rgba(233,236,244,.85); text-align:center; padding:12px}
+    .section{padding:26px 0}
+    .sectionTitle{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:12px}
+    h2{margin:0; font-size:24px}
+    .hint{color:var(--muted); font-size:14px; margin:0}
+    .grid{display:grid; gap:14px; grid-template-columns: repeat(3, 1fr)}
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+    .box{padding:16px}
+    .box h3{margin:0 0 8px; font-size:16px}
+    .box p{margin:0; color:var(--muted); line-height:1.55; font-size:14px}
+    .tabs{display:flex; gap:10px; flex-wrap:wrap}
+    .tab{padding:9px 12px; border-radius:999px; border:1px solid var(--border);
+      background:rgba(255,255,255,.05); color:var(--text); cursor:pointer; font-size:14px}
+    .tab.active{border-color:rgba(167,243,208,.55); background:rgba(167,243,208,.12)}
+    .panel{display:none}
+    .panel.active{display:block}
+    .steps{display:grid; gap:14px; grid-template-columns: 1fr 1fr}
+    @media (max-width: 900px){ .steps{grid-template-columns:1fr} }
+    .stepNum{display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px;
+      border-radius:10px; background:rgba(125,211,252,.15); border:1px solid rgba(125,211,252,.35); margin-right:10px; font-weight:700}
+    .stepHead{display:flex; align-items:center; margin-bottom:8px}
+    .embedWrap{position:relative; width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; border:1px solid var(--border)}
+    iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+    .gallery{display:grid; gap:14px; grid-template-columns: 1.4fr .6fr}
+    @media (max-width: 900px){ .gallery{grid-template-columns:1fr} }
+    .bigImg{border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.05);
+      min-height:260px; display:flex; align-items:center; justify-content:center; padding:12px; color:var(--muted)}
+    .thumbs{display:grid; gap:10px}
+    .thumb{cursor:pointer; padding:10px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.04); color:var(--muted); font-size:13px}
+    .thumb:hover{background:rgba(255,255,255,.08)}
+    .thumb.active{border-color:rgba(125,211,252,.55); background:rgba(125,211,252,.10); color:var(--text)}
+    details{border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.04); padding:12px 14px}
+    details + details{margin-top:10px}
+    summary{cursor:pointer; font-weight:600}
+    summary::marker{color:rgba(125,211,252,.9)}
+    footer{padding:30px 0 50px; color:var(--muted); font-size:13px}
+    .divider{height:1px; background:var(--border); margin:18px 0}
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="nav">
+    <div class="brand">
+      <span style="font-size:18px">🟡</span>
+      <span>maimai Beginner Guide</span>
+      <span class="pill">single-page</span>
+    </div>
+    <div class="navlinks">
+      <button class="btn" data-scroll="#about">About</button>
+      <button class="btn primary" data-scroll="#start">How to Start</button>
+      <button class="btn" data-scroll="#video">Video</button>
+      <button class="btn" data-scroll="#gallery">Images</button>
+      <button class="btn" data-scroll="#faq">FAQ</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="heroGrid">
+      <div class="card heroCard">
+        <h1>Start maimai without feeling lost.</h1>
+        <p class="sub">
+          This guide is for first-time players who see <b>maimai</b> in arcades and want a quick, low-stress way to begin.
+          You’ll learn what the game is, what to do on your first credit, and how to improve step-by-step.
+        </p>
+        <div class="ctaRow">
+          <button class="btn primary" data-scroll="#start">I’m new — show me how to start</button>
+          <button class="btn" data-scroll="#about">What even is maimai?</button>
+        </div>
+        <div class="mini">Tip: You can keep everything on one page—buttons just scroll smoothly.</div>
+      </div>
+
+      <div class="card mediaCard">
+        <div class="media">
+          <div>
+            <div style="font-weight:700; margin-bottom:6px">Hero media placeholder</div>
+            <div style="font-size:13px; opacity:.9">
+              Put a screenshot, a short GIF, or a 10–20 sec clip preview here.
+              <br/>If you want, replace this box with an embedded video.
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
+          <span class="pill">Buttons</span>
+          <span class="pill">Scroll</span>
+          <span class="pill">Tabs</span>
+          <span class="pill">FAQ accordion</span>
+          <span class="pill">Gallery</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="sectionTitle">
+      <h2>About maimai</h2>
+      <p class="hint">Quick context before you play your first song.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card box">
+        <h3>What it is</h3>
+        <p>
+          maimai is a rhythm game where notes appear on a circular screen and you tap, hold, slide, and sometimes touch the outer sensors.
+          It looks intimidating, but the early difficulties are designed for beginners.
+        </p>
+      </div>
+      <div class="card box">
+        <h3>What you need</h3>
+        <p>
+          Just one credit. You don’t need prior rhythm-game experience.
+          The goal of your first session is simple: pick an easy chart and finish a song comfortably.
+        </p>
+      </div>
+      <div class="card box">
+        <h3>How improvement works</h3>
+        <p>
+          You improve mainly through repetition and feedback: start easy, focus on accuracy, then raise difficulty gradually.
+          This guide is built around that progression.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- START -->
+  <section id="start" class="section">
+    <div class="sectionTitle">
+      <h2>How to Start (your first credit)</h2>
+      <p class="hint">Pick a path—content switches without leaving the page.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Player type">
+      <button class="tab active" data-tab="newbie" role="tab" aria-selected="true">I’m totally new</button>
+      <button class="tab" data-tab="experienced" role="tab" aria-selected="false">I’ve played rhythm games</button>
+    </div>
+
+    <div class="card box" style="margin-top:12px">
+      <div id="panel-newbie" class="panel active" role="tabpanel">
+        <div class="steps">
+          <div class="card box" style="background:rgba(255,255,255,.03)">
+            <div class="stepHead"><span class="stepNum">1</span><h3 style="margin:0">Choose a low difficulty</h3></div>
+            <p>Start at the easiest level you can find (even if it feels “too easy”). Your goal is finishing cleanly, not showing off.</p>
+          </div>
+          <div class="card box" style="background:rgba(255,255,255,.03)">
+            <div class="stepHead"><span class="stepNum">2</span><h3 style="margin:0">Learn 4 actions only</h3></div>
+            <p>For your first song, focus on: tap, hold, slide, and simple timing. Ignore advanced patterns until you’re comfortable.</p>
+          </div>
+          <div class="card box" style="background:rgba(255,255,255,.03)">
+            <div class="stepHead"><span class="stepNum">3</span><h3 style="margin:0">Play one song twice</h3></div>
+            <p>Replay the same easy chart once. You’ll see improvement faster than switching songs too early.</p>
+          </div>
+          <div class="card box" style="background:rgba(255,255,255,.03)">
+            <div class="stepHead"><span class="stepNum">4</span><h3 style="margin:0">Raise difficulty slowly</h3></div>
+            <p>Only increase when you can consistently read patterns and stay on-beat. “Small jumps” reduce frustration.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-experienced" class="panel" role="tabpanel">
+        <div class="steps">
+          <div class="card box" style="background:rgba(255,255,255,.03)">
+            <div class="stepHead"><span class="stepNum">1</span><h3 style="margin:0">Calibrate to the ring</h3></div>
+            <p>Even if you play other rhythm games, maimai’s circular reading is different. Start 1–2 levels lower than your “usual.”</p>
+          </div>
+          <div class="card box" style="background:rgba(255,255,255,.03)">
+            <div class="stepHead"><span class="stepNum">2</span><h3 style="margin:0">Focus on slides + spacing</h3></div>
+            <p>Most “where did I miss?” moments come from slide paths and hand movement planning. Practice patterns, not speed.</p>
+          </div>
+          <div class="card box" style="background:rgba(255,255,255,.03)">
+            <div class="stepHead"><span class="stepNum">3</span><h3 style="margin:0">One skill per session</h3></div>
+            <p>Example: today only work on consistent timing, next session only work on reading slides, etc.</p>
+          </div>
+          <div class="card box" style="background:rgba(255,255,255,.03)">
+            <div class="stepHead"><span class="stepNum">4</span><h3 style="margin:0">Use mistakes as feedback</h3></div>
+            <p>If you miss, note whether it’s reading, timing, or movement. That tells you exactly what to practice next.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section id="video" class="section">
+    <div class="sectionTitle">
+      <h2>Watch a quick demo</h2>
+      <p class="hint">Embed a YouTube video here (most stable for school projects).</p>
+    </div>
+    <div class="card box">
+      <div class="embedWrap">
+        <!-- Replace the src with your chosen video.
+             Example: https://www.youtube.com/embed/VIDEO_ID -->
+        <iframe
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          title="Demo video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <p class="mini">Replace the embed link with your own tutorial clip or a gameplay demo you’re allowed to use.</p>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="section">
+    <div class="sectionTitle">
+      <h2>Images (click to switch)</h2>
+      <p class="hint">Simple interaction: thumbnail buttons change the main image.</p>
+    </div>
+
+    <div class="gallery">
+      <div class="card bigImg" id="bigImg">
+        Main image placeholder — replace with your screenshot or diagram.
+      </div>
+
+      <div class="thumbs">
+        <div class="thumb active" data-img="assets/screen-1.jpg">Screen overview</div>
+        <div class="thumb" data-img="assets/controls-1.jpg">Basic controls</div>
+        <div class="thumb" data-img="assets/difficulty-1.jpg">Difficulty example</div>
+        <div class="thumb" data-img="assets/arcade-1.jpg">Where you play</div>
+      </div>
+    </div>
+
+    <p class="mini">Put your images under <code>/assets/</code> and keep filenames matching the thumbnail data-img attributes.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section">
+    <div class="sectionTitle">
+      <h2>FAQ</h2>
+      <p class="hint">Click to expand (accordion).</p>
+    </div>
+
+    <details class="card">
+      <summary>What difficulty should I start with?</summary>
+      <div style="margin-top:10px; color:var(--muted); line-height:1.6">
+        Start lower than you think. The best first session ends with “I understand what happened,” not “I survived.”
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Do I need to be “talented” at rhythm games?</summary>
+      <div style="margin-top:10px; color:var(--muted); line-height:1.6">
+        No. Improvement is mostly practice + feedback. Choose easy charts, replay, and slowly increase difficulty.
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>How do I stop feeling embarrassed in public?</summary>
+      <div style="margin-top:10px; color:var(--muted); line-height:1.6">
+        Start on low difficulty, focus on learning the interface, and treat your first credit as “training,” not performance.
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <div class="divider"></div>
+    <div>Made for a class project. Replace placeholders with your own writing, screenshots, and demo clips.</div>
+  </footer>
+</main>
+
+<script>
+  // Smooth scroll buttons
+  document.querySelectorAll('[data-scroll]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sel = btn.getAttribute('data-scroll');
+      const el = document.querySelector(sel);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Tabs: Newbie / Experienced
+  const tabs = document.querySelectorAll('.tab');
+  const panels = {
+    newbie: document.getElementById('panel-newbie'),
+    experienced: document.getElementById('panel-experienced')
+  };
+  tabs.forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const key = t.dataset.tab;
+      Object.keys(panels).forEach(k => panels[k].classList.remove('active'));
+      panels[key].classList.add('active');
+      tabs.forEach(x => x.setAttribute('aria-selected', String(x === t)));
+    });
+  });
+
+  // Gallery: thumbnail switches main image
+  const big = document.getElementById('bigImg');
+  const thumbs = document.querySelectorAll('.thumb');
+  function setBig(src, label){
+    big.innerHTML = `
+      <div style="width:100%">
+        <div style="font-weight:700; color:rgba(233,236,244,.9); margin-bottom:8px">${label}</div>
+        <img src="${src}" alt="${label}" style="width:100%; border-radius:12px; border:1px solid rgba(255,255,255,.10)" onerror="this.remove(); document.getElementById('bigImg').lastElementChild?.remove();" />
+        <div style="margin-top:10px; font-size:13px; color:var(--muted)">
+          If the image doesn't load, check the file path: <code>${src}</code>
+        </div>
+      </div>
+    `;
+  }
+  thumbs.forEach(th => {
+    th.addEventListener('click', () => {
+      thumbs.forEach(x => x.classList.remove('active'));
+      th.classList.add('active');
+      setBig(th.dataset.img, th.textContent.trim());
+    });
+  });
+  // Default big image
+  setBig(thumbs[0].dataset.img, thumbs[0].textContent.trim());
+</script>
+</body>
+</html>
